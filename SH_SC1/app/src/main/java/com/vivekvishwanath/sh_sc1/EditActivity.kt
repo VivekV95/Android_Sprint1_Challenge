@@ -20,7 +20,7 @@ class EditActivity : AppCompatActivity() {
             movie.isWatched = watched_switch.isChecked
             val intent = Intent()
             intent.putExtra(MOVIE_KEY, movie)
-            setResult(Activity.RESULT_OK)
+            setResult(Activity.RESULT_OK, intent)
             finish()
         }
     }
