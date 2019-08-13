@@ -31,12 +31,13 @@ class ListActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == MOVIE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val movie = data?.getSerializableExtra(MOVIE_KEY) as Movie
+            movieList.add(movie)
+            displayMovies()
         }
     }
 
     fun createTextview(movie: Movie): TextView {
         val textview = TextView(this)
-        textview.height = 20
         textview.textSize = 16f
         textview.text = movie.movieTitle
         if (movie.isWatched) textview.setTextColor(resources.getColor(R.color.colorPrimary))
