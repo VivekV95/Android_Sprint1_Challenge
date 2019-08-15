@@ -28,33 +28,39 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == MOVIE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val movie = data?.getSerializableExtra(MOVIE_KEY) as Movie
-            movieList.add(movie)
-            displayMovies()
-        }
-    }
-
-    fun createTextview(movie: Movie): TextView {
+    fun createTextview(movie: Movie, index: Int): TextView {
         val textview = TextView(this)
         textview.textSize = 16f
         textview.text = movie.movieTitle
         if (movie.isWatched) textview.setTextColor(resources.getColor(R.color.colorPrimary))
         else textview.setTextColor(resources.getColor(R.color.colorAccent))
 
+        textview.setOnClickListener {
+            val intent = Intent(this, EditActivity::class.java)
+            intent.putExtra(MOVIE_KEY, movie)
+            startActivityForResult(intent, MOVIE_REQUEST_CODE)
+
+            movieList.removeAt(index)
+        }
+
         return textview
     }
 
     fun displayMovies() {
         movie_list_layout.removeAllViews()
-        /* for (movie in movieList) {
-            val textview = createTextview(movie)
+        movieList.forEachIndexed { index, movie ->
+            val textview = createTextview(movie, index)
             movie_list_layout.addView(textview)
-        }*/
-        movieList.forEach {
-            val textview = createTextview(it)
-            movie_list_layout.addView(textview)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == MOVIE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val movie = data?.getSerializableExtra(MOVIE_KEY) as Movie
+            movieList.add(movie)
+            displayMovies()
+        } else if(requestCode == MOVIE_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
+            displayMovies()
         }
     }
 }

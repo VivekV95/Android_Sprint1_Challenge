@@ -10,9 +10,18 @@ import kotlinx.android.synthetic.main.activity_edit.*
 
 class EditActivity : AppCompatActivity() {
 
+    var movie = Movie()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit)
+
+        val extra = intent.getSerializableExtra(MOVIE_KEY)
+        if (extra != null) {
+            movie = extra as Movie
+            movie_title_text.setText(movie.movieTitle)
+            watched_switch.isChecked = movie.isWatched
+        }
 
         save_button.setOnClickListener {
             val movie = Movie()
@@ -21,6 +30,12 @@ class EditActivity : AppCompatActivity() {
             val intent = Intent()
             intent.putExtra(MOVIE_KEY, movie)
             setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
+
+        delete_button.setOnClickListener {
+            val intent = Intent()
+            setResult(Activity.RESULT_CANCELED, intent)
             finish()
         }
     }
